@@ -140,7 +140,7 @@ func (w *respWriter) WriteHeader(code int, httpMessage interface{}, hasBody bool
 
 	w.wroteHeader = true
 
-	if hasBody || opts != "" {
+	if hasBody {
 		w.cw = NewChunkedWriter(w.conn.buf.Writer, opts)
 	}
 }
