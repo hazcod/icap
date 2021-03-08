@@ -82,6 +82,6 @@ func HandleREQMOD2(w ResponseWriter, req *Request) {
 	body, _ := ioutil.ReadAll(req.Request.Body)
 	newBody := string(body) + "  ICAP powered!"
 
-	w.WriteHeader(200, req.Request, true)
+	w.WriteHeader(200, req.Request, true, "")
 	io.WriteString(w, newBody)
 }

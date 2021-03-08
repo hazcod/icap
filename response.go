@@ -37,7 +37,7 @@ type ResponseWriter interface {
 	// Then it sends an HTTP header if httpMessage is not nil.
 	// httpMessage may be an *http.Request or an *http.Response.
 	// hasBody should be true if there will be calls to Write(), generating a message body.
-	WriteHeader(code int, httpMessage interface{}, hasBody bool)
+	WriteHeader(code int, httpMessage interface{}, hasBody bool, opts string)
 }
 
 type respWriter struct {
