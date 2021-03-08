@@ -13,7 +13,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"net/http/httputil"
 	"strconv"
 	"strings"
 	"time"
@@ -56,7 +55,7 @@ func (w *respWriter) Header() http.Header {
 
 func (w *respWriter) Write(p []byte) (n int, err error) {
 	if !w.wroteHeader {
-		w.WriteHeader(http.StatusOK, nil, true)
+		w.WriteHeader(http.StatusOK, nil, true, "")
 	}
 
 	if w.cw == nil {
@@ -71,7 +70,7 @@ func (w *respWriter) WriteRaw(p string) {
 	w.wroteRaw = true
 }
 
-func (w *respWriter) WriteHeader(code int, httpMessage interface{}, hasBody bool) {
+func (w *respWriter) WriteHeader(code int, httpMessage interface{}, hasBody bool, opts string) {
 	if w.wroteHeader {
 		log.Println("Called WriteHeader twice on the same connection")
 		return
@@ -142,13 +141,13 @@ func (w *respWriter) WriteHeader(code int, httpMessage interface{}, hasBody bool
 	w.wroteHeader = true
 
 	if hasBody {
-		w.cw = httputil.NewChunkedWriter(w.conn.buf.Writer)
+		w.cw = NewChunkedWriter(w.conn.buf.Writer, opts)
 	}
 }
 
 func (w *respWriter) finishRequest() {
 	if !w.wroteHeader {
-		w.WriteHeader(http.StatusOK, nil, false)
+		w.WriteHeader(http.StatusOK, nil, false, "")
 	}
 
 	if w.cw != nil && !w.wroteRaw {
